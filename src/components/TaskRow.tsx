@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTasksStore } from '../store/tasks-store'
+import { usePoolStore } from '../store/pool-store'
 import { useViewStore } from '../store/view-store'
 import type { Task } from '../types'
 import { api } from '../api'
 import { countSubtasks } from '../utils/subtasks'
+import { postponeOneDay, moveToPool, abandonTask } from '../utils/task-actions'
 import { TaskDetail } from './TaskDetail'
 
 const COMMIT_DELAY_MS = 2000
@@ -11,6 +13,7 @@ const COMMIT_DELAY_MS = 2000
 export function TaskRow({ task }: { task: Task }) {
   const upsert = useTasksStore(s => s.upsert)
   const reload = useTasksStore(s => s.load)
+  const reloadPool = usePoolStore(s => s.load)
   const toggleExpand = useViewStore(s => s.toggleExpand)
   const setEditing = useViewStore(s => s.setEditing)
   const expandedId = useViewStore(s => s.expandedTaskId)
@@ -68,6 +71,29 @@ export function TaskRow({ task }: { task: Task }) {
         <span className="row-actions">
           <button
             className="row-action"
+            title="推迟一天"
+            onClick={async (e) => {
+              e.stopPropagation()
+              await postponeOneDay(task)
+              await reload()
+            }}
+          >
+            →
+          </button>
+          <button
+            className="row-action"
+            title="搁置"
+            onClick={async (e) => {
+              e.stopPropagation()
+              await moveToPool(task)
+              await reload()
+              await reloadPool()
+            }}
+          >
+            📥
+          </button>
+          <button
+            className="row-action"
             title="编辑详情"
             onClick={(e) => {
               e.stopPropagation()
@@ -76,6 +102,18 @@ export function TaskRow({ task }: { task: Task }) {
             }}
           >
             ✎
+          </button>
+          <button
+            className="row-action"
+            title="放弃"
+            onClick={async (e) => {
+              e.stopPropagation()
+              if (!window.confirm(`放弃任务"${task.title}"？`)) return
+              await abandonTask(task)
+              await reload()
+            }}
+          >
+            ✕
           </button>
         </span>
       </div>
