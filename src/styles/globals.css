@@ -1,0 +1,10 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+  font-size: 13px;
+  color: #1d1d1f;
+  background: #f5f5f7;
+  user-select: none;
+  overflow: hidden;
+}
