@@ -26,21 +26,52 @@ interface TokenMatch {
   consumedLength: number
 }
 
+function parseTimeFragment(s: string): { time: string, length: number } | null {
+  let offset = 0
+  let ampm: 'am' | 'pm' | null = null
+  if (s.startsWith('上午') || s.startsWith('早上')) { ampm = 'am'; offset = 2 }
+  else if (s.startsWith('中午')) { ampm = 'pm'; offset = 2 }
+  else if (s.startsWith('下午') || s.startsWith('晚上')) { ampm = 'pm'; offset = 2 }
+  const rest = s.slice(offset)
+
+  const colonMatch = rest.match(/^(\d{1,2}):(\d{2})/)
+  if (colonMatch) {
+    let h = Number(colonMatch[1])
+    const mm = Number(colonMatch[2])
+    if (ampm === 'pm' && h < 12) h += 12
+    if (ampm === 'am' && h === 12) h = 0
+    return { time: `${String(h).padStart(2,'0')}:${String(mm).padStart(2,'0')}`, length: offset + colonMatch[0].length }
+  }
+  const dotMatch = rest.match(/^(\d{1,2})点(半)?/)
+  if (dotMatch) {
+    let h = Number(dotMatch[1])
+    const half = !!dotMatch[2]
+    if (ampm === 'pm' && h < 12) h += 12
+    if (ampm === 'am' && h === 12) h = 0
+    return { time: `${String(h).padStart(2,'0')}:${half ? '30' : '00'}`, length: offset + dotMatch[0].length }
+  }
+  return null
+}
+
 function tryMatchToken(rest: string, today: string): TokenMatch | null {
+  let dateConsumed = 0
+  let date: string | undefined
+
   const rel = rest.match(/^(今天|明天|后天|大后天)/)
-  if (rel) {
-    const off = { '今天':0, '明天':1, '后天':2, '大后天':3 }[rel[1]]!
-    return { date: addDays(today, off), consumedLength: rel[0].length }
-  }
   const nDays = rest.match(/^([\d一二两三四五六七八九十]+)天后/)
-  if (nDays) {
-    const n = parseNum(nDays[1])
-    if (n != null) return { date: addDays(today, n), consumedLength: nDays[0].length }
-  }
   const mdCN = rest.match(/^(\d{1,2})月(\d{1,2})日?/)
   const mdDot = rest.match(/^(\d{1,2})[.\-\/](\d{1,2})/)
-  const md = mdCN || mdDot
-  if (md) {
+  const nextWeek = rest.match(/^下周([一二三四五六日天])/)
+  const thisWeek = rest.match(/^周([一二三四五六日天])/)
+
+  if (rel) {
+    date = addDays(today, { '今天':0, '明天':1, '后天':2, '大后天':3 }[rel[1]]!)
+    dateConsumed = rel[0].length
+  } else if (nDays) {
+    const n = parseNum(nDays[1])
+    if (n != null) { date = addDays(today, n); dateConsumed = nDays[0].length }
+  } else if (mdCN || mdDot) {
+    const md = mdCN || mdDot!
     const m = Number(md[1]), d = Number(md[2])
     if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
       const tDate = parseYmd(today)
@@ -50,28 +81,35 @@ function tryMatchToken(rest: string, today: string): TokenMatch | null {
         year += 1
         candidate = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`
       }
-      return { date: candidate, consumedLength: md[0].length }
+      date = candidate; dateConsumed = md[0].length
     }
-  }
-  const nextWeek = rest.match(/^下周([一二三四五六日天])/)
-  if (nextWeek) {
+  } else if (nextWeek) {
     const target = WEEKDAY[nextWeek[1]]
     const todayDate = parseYmd(today)
     const todayDow = todayDate.getDay()
     const thisMonday = addDays(today, todayDow === 0 ? -6 : 1 - todayDow)
     const nextMonday = addDays(thisMonday, 7)
-    return { date: addDays(nextMonday, target === 0 ? 6 : target - 1), consumedLength: nextWeek[0].length }
-  }
-  const thisWeek = rest.match(/^周([一二三四五六日天])/)
-  if (thisWeek) {
+    date = addDays(nextMonday, target === 0 ? 6 : target - 1)
+    dateConsumed = nextWeek[0].length
+  } else if (thisWeek) {
     const target = WEEKDAY[thisWeek[1]]
     const todayDate = parseYmd(today)
     const todayDow = todayDate.getDay()
     const thisMonday = addDays(today, todayDow === 0 ? -6 : 1 - todayDow)
     let candidate = addDays(thisMonday, target === 0 ? 6 : target - 1)
     if (candidate < today) candidate = addDays(candidate, 7)
-    return { date: candidate, consumedLength: thisWeek[0].length }
+    date = candidate; dateConsumed = thisWeek[0].length
   }
+
+  const timeFrag = parseTimeFragment(rest.slice(dateConsumed))
+  if (timeFrag) {
+    return { date, time: timeFrag.time, consumedLength: dateConsumed + timeFrag.length }
+  }
+  if (date) return { date, consumedLength: dateConsumed }
+
+  const onlyTime = parseTimeFragment(rest)
+  if (onlyTime) return { time: onlyTime.time, consumedLength: onlyTime.length }
+
   return null
 }
 
