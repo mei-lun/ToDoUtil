@@ -36,7 +36,7 @@ export const DEFAULT_CONFIG: Config = {
   alwaysOnTop: true,
   immersiveMode: false,
   shortcut: 'CommandOrControl+Alt+T',
-  windowBounds: { width: 280, height: 200 },
+  windowBounds: { width: 300, height: 360 },
   dataDir: 'default',
   notificationsEnabled: false,
   backupRetentionDays: 30,
