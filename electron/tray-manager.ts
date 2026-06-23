@@ -31,13 +31,19 @@ export function refreshMenu() {
   const menu = Menu.buildFromTemplate([
     {
       label: '＋ 快速添加任务…',
-      click: () => BrowserWindow.getAllWindows().forEach(w => w.webContents.send('quick-add:open')),
+      click: () => {
+        showMain()
+        BrowserWindow.getAllWindows().forEach(w => w.webContents.send('quick-add:open'))
+      },
     },
     { type: 'separator' },
     { label: '显示主窗口', click: () => showMain() },
     {
       label: '↔ 移动窗口',
-      click: () => BrowserWindow.getAllWindows().forEach(w => w.webContents.send('window:move-mode', true)),
+      click: () => {
+        showMain()
+        BrowserWindow.getAllWindows().forEach(w => w.webContents.send('window:move-mode', true))
+      },
     },
     {
       label: '钉在桌面',
@@ -48,15 +54,24 @@ export function refreshMenu() {
     { type: 'separator' },
     {
       label: `📥 搁置池 (${poolCount})`,
-      click: () => BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'pool')),
+      click: () => {
+        showMain()
+        BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'pool'))
+      },
     },
     {
       label: '📚 归档',
-      click: () => BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'archive')),
+      click: () => {
+        showMain()
+        BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'archive'))
+      },
     },
     {
       label: '⚙ 设置',
-      click: () => BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'settings')),
+      click: () => {
+        showMain()
+        BrowserWindow.getAllWindows().forEach(w => w.webContents.send('view:set', 'settings'))
+      },
     },
     { type: 'separator' },
     { label: '关于', click: () => app.showAboutPanel?.() },
