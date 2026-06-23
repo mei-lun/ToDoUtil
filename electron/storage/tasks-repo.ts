@@ -19,6 +19,11 @@ export function deleteTask(id: string): void {
   atomicWriteJson(paths().tasks, tasks)
 }
 
+export function purgeTask(id: string): void {
+  deleteTask(id)
+  // 附件清理留给 attachments 模块独立处理（避免循环依赖）
+}
+
 export function bulkReplace(tasks: Task[]): void {
   atomicWriteJson(paths().tasks, tasks)
 }
