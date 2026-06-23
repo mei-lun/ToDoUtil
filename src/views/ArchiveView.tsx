@@ -1,0 +1,36 @@
+import { useEffect, useState } from 'react'
+import { useViewStore } from '../store/view-store'
+import { useArchiveStore } from '../store/archive-store'
+import { Timeline } from '../components/Timeline'
+
+export function ArchiveView() {
+  const setMode = useViewStore(s => s.setMode)
+  const load = useArchiveStore(s => s.load)
+  const setQuery = useArchiveStore(s => s.setQuery)
+  const query = useArchiveStore(s => s.query)
+  const [view, setView] = useState<'timeline' | 'grid'>('timeline')
+
+  useEffect(() => { load() }, [load])
+
+  return (
+    <div className="archive-view">
+      <div className="subview-bar">
+        <button className="icon-btn" onClick={() => setMode('date')}>◀ 返回</button>
+        <span className="date-label">归档</span>
+        <div className="topbar-spacer" />
+        <button className={`view-toggle ${view === 'timeline' ? 'active' : ''}`} onClick={() => setView('timeline')}>时间线</button>
+        <button className={`view-toggle ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')}>网格</button>
+      </div>
+      <div className="archive-search-bar">
+        <input
+          className="archive-search"
+          placeholder="🔍 搜索归档…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
+      {view === 'timeline' && <Timeline />}
+      {view === 'grid' && <div className="empty-state">网格视图（Phase 10 实现）</div>}
+    </div>
+  )
+}

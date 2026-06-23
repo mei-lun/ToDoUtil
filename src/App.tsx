@@ -6,6 +6,7 @@ import { AddInput } from './components/AddInput'
 import { TopBar } from './components/TopBar'
 import { TodayView } from './views/TodayView'
 import { PoolView } from './views/PoolView'
+import { ArchiveView } from './views/ArchiveView'
 import { api } from './api'
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
       <TopBar poolCount={poolCount} />
       {mode === 'date' && <TodayView />}
       {mode === 'pool' && <PoolView />}
+      {mode === 'archive' && <ArchiveView />}
     </div>
   )
 }

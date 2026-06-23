@@ -160,3 +160,16 @@ body {
 .archive-row.is-abandoned .archive-bar { background: var(--abandoned); }
 .archive-days { font-size: 11px; color: var(--text-secondary); width: 36px; text-align: right; }
 .archive-detail { padding: 8px 12px 12px 30px; background: rgba(0,0,0,0.02); }
+
+.view-toggle {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 2px 8px; font-size: 11px; cursor: pointer;
+}
+.view-toggle.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.archive-search-bar { padding: 6px 12px; border-bottom: 1px solid var(--border); }
+.archive-search {
+  width: 100%; padding: 4px 8px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font: inherit; outline: none;
+  background: var(--bg-elevated); color: var(--text);
+}
+.archive-search:focus { border-color: var(--accent); }
