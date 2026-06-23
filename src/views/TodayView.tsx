@@ -61,11 +61,13 @@ export function TodayView() {
   }
 
   // 计算当前鼠标位置 → 应插入到哪个 task.id 之前（null = 插末尾）
-  // 使用 .task-row 自身的中线，避免 indicator 占位让 wrapper 高度跳动导致命中点抖动。
-  function calcInsertBefore(clientY: number): string | null {
+  // 关键点：必须排除被拖的行本身——否则鼠标落在源行上半部分时会命中源行，
+  // 导致上拖看起来卡住。排除后源行的占位区域归给"下一行之前"，等价于"不动"。
+  function calcInsertBefore(clientY: number, draggedId: string): string | null {
     const list = listRef.current
     if (!list) return null
     const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-row-id] > .task-row'))
+      .filter(row => (row.parentElement as HTMLElement | null)?.dataset.rowId !== draggedId)
     for (const row of rows) {
       const rect = row.getBoundingClientRect()
       const mid = rect.top + rect.height / 2
@@ -86,7 +88,7 @@ export function TodayView() {
         const dx = e.clientX - d.startX
         const dy = e.clientY - d.startY
         const active = d.active || Math.hypot(dx, dy) >= DRAG_THRESHOLD
-        const insertBefore = active ? calcInsertBefore(e.clientY) : null
+        const insertBefore = active ? calcInsertBefore(e.clientY, d.taskId) : null
         return { ...d, curX: e.clientX, curY: e.clientY, active, insertBefore }
       })
     }
