@@ -59,13 +59,12 @@ export function MarkdownEditor({ initial, taskId, onSave, onCancel }: Props) {
     const ext = IMG_EXT_BY_MIME[file.type] ?? 'png'
     const b64 = await fileToBase64(file)
     try {
-      const url = await api.attach.save(taskId, b64, ext)
+      const rel = await api.attach.save(taskId, b64, ext)
       const ta = ref.current
       if (!ta) return
       const cursor = ta.selectionStart
-      const snippet = `\n![](${url})\n`
-      const next = value.slice(0, cursor) + snippet + value.slice(cursor)
-      setValue(next)
+      const snippet = `\n![](${rel})\n`
+      setValue(prev => prev.slice(0, cursor) + snippet + prev.slice(cursor))
       requestAnimationFrame(() => {
         ta.focus()
         ta.selectionStart = ta.selectionEnd = cursor + snippet.length
@@ -91,7 +90,10 @@ export function MarkdownEditor({ initial, taskId, onSave, onCancel }: Props) {
     const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'))
     if (files.length) {
       e.preventDefault()
-      for (const f of files) await insertImage(f)
+      for (const f of files) {
+        await insertImage(f)
+        await new Promise(r => requestAnimationFrame(() => r(null)))
+      }
     }
   }
 
