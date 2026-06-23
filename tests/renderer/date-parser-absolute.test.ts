@@ -11,6 +11,21 @@ describe('parseRawTitle - absolute dates', () => {
   it('past date in current year rolls to next year', () => {
     expect(parseRawTitle('@1.5 X', TODAY).plannedDate).toBe('2027-01-05')
   })
+  it('@2.30 invalid → no consume, title kept, date=today', () => {
+    const r = parseRawTitle('@2.30 X', TODAY)
+    expect(r.plannedDate).toBe(TODAY)
+    expect(r.title).toBe('@2.30 X')
+  })
+  it('@4.31 invalid → no consume, title kept, date=today', () => {
+    const r = parseRawTitle('@4.31 X', TODAY)
+    expect(r.plannedDate).toBe(TODAY)
+    expect(r.title).toBe('@4.31 X')
+  })
+  it('@2.29 invalid in both 2026 and 2027 → no consume, title kept', () => {
+    const r = parseRawTitle('@2.29 X', TODAY)
+    expect(r.plannedDate).toBe(TODAY)
+    expect(r.title).toBe('@2.29 X')
+  })
 })
 
 describe('parseRawTitle - weekday', () => {

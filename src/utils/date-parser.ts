@@ -75,13 +75,22 @@ function tryMatchToken(rest: string, today: string): TokenMatch | null {
     const m = Number(md[1]), d = Number(md[2])
     if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
       const tDate = parseYmd(today)
-      let year = tDate.getFullYear()
-      let candidate = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`
-      if (candidate < today) {
-        year += 1
-        candidate = `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+      const isValid = (y: number) => {
+        const dt = new Date(y, m - 1, d)
+        return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d
       }
-      date = candidate; dateConsumed = md[0].length
+      const fmt = (y: number) => `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+      let year = tDate.getFullYear()
+      let candidate: string | null = null
+      if (isValid(year)) {
+        const c = fmt(year)
+        if (c >= today) candidate = c
+        else if (isValid(year + 1)) candidate = fmt(year + 1)
+      } else if (isValid(year + 1)) {
+        const c = fmt(year + 1)
+        if (c >= today) candidate = c
+      }
+      if (candidate) { date = candidate; dateConsumed = md[0].length }
     }
   } else if (nextWeek) {
     const target = WEEKDAY[nextWeek[1]]
