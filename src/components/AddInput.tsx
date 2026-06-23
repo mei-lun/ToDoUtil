@@ -50,7 +50,7 @@ export function AddInput() {
   }
 
   return (
-    <div className="add-input">
+    <div className={`add-input ${open ? 'is-open' : ''}`}>
       {!open ? (
         <button className="add-btn" onClick={() => setOpen(true)} aria-label="添加任务">＋</button>
       ) : (
