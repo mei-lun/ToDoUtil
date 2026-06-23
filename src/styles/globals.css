@@ -99,3 +99,36 @@ body {
 }
 .row-action:hover { background: rgba(0,0,0,0.06); color: var(--text); }
 .task-row.is-expanded { background: rgba(0,0,0,0.03); }
+
+.subview-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.pool-view, .archive-view { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.task-list { flex: 1; overflow-y: auto; }
+
+.popover-mask {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.popover {
+  background: #fff; border-radius: var(--radius-md); padding: 12px;
+  box-shadow: var(--shadow-md); width: 220px;
+}
+.popover-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+.popover-date {
+  width: 100%; padding: 6px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font: inherit; margin-bottom: 8px;
+}
+.popover-shortcuts { display: flex; gap: 4px; margin-bottom: 8px; }
+.popover-shortcuts button {
+  flex: 1; padding: 4px; border: 1px solid var(--border);
+  background: transparent; border-radius: var(--radius-sm); cursor: pointer; font-size: 11px;
+}
+.popover-actions { display: flex; gap: 4px; justify-content: flex-end; }
+.popover-actions button {
+  padding: 4px 10px; border: 1px solid var(--border);
+  background: transparent; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px;
+}
+.popover-actions button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }

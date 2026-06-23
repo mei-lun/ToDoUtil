@@ -5,6 +5,7 @@ import { useViewStore } from './store/view-store'
 import { AddInput } from './components/AddInput'
 import { TopBar } from './components/TopBar'
 import { TodayView } from './views/TodayView'
+import { PoolView } from './views/PoolView'
 
 export default function App() {
   const loadTasks = useTasksStore(s => s.load)
@@ -22,6 +23,7 @@ export default function App() {
       <AddInput />
       <TopBar poolCount={poolCount} />
       {mode === 'date' && <TodayView />}
+      {mode === 'pool' && <PoolView />}
     </div>
   )
 }
