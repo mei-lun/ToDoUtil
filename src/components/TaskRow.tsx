@@ -11,7 +11,13 @@ import { DelayBadge } from './DelayBadge'
 
 const COMMIT_DELAY_MS = 2000
 
-export function TaskRow({ task }: { task: Task }) {
+interface Props {
+  task: Task
+  onPointerDownDrag?: (taskId: string, e: React.PointerEvent) => void
+  isDragging?: boolean
+}
+
+export function TaskRow({ task, onPointerDownDrag, isDragging }: Props) {
   const upsert = useTasksStore(s => s.upsert)
   const reload = useTasksStore(s => s.load)
   const reloadPool = usePoolStore(s => s.load)
@@ -20,9 +26,7 @@ export function TaskRow({ task }: { task: Task }) {
   const expandedId = useViewStore(s => s.expandedTaskId)
   const expanded = expandedId === task.id
   const [pendingDone, setPendingDone] = useState(task.status === 'done')
-  const [draggable, setDraggable] = useState(false)
   const timerRef = useRef<number | null>(null)
-  const longPressTimer = useRef<number | null>(null)
 
   useEffect(() => { setPendingDone(task.status === 'done') }, [task.status])
 
@@ -32,35 +36,8 @@ export function TaskRow({ task }: { task: Task }) {
         window.clearTimeout(timerRef.current)
         timerRef.current = null
       }
-      if (longPressTimer.current != null) {
-        window.clearTimeout(longPressTimer.current)
-        longPressTimer.current = null
-      }
     }
   }, [])
-
-  function onMouseDown() {
-    if (longPressTimer.current != null) window.clearTimeout(longPressTimer.current)
-    longPressTimer.current = window.setTimeout(() => {
-      setDraggable(true)
-      longPressTimer.current = null
-    }, 300)
-  }
-  function clearLongPress() {
-    if (longPressTimer.current != null) {
-      window.clearTimeout(longPressTimer.current)
-      longPressTimer.current = null
-    }
-  }
-  function onMouseUp() {
-    clearLongPress()
-    window.setTimeout(() => setDraggable(false), 0)
-  }
-
-  function onDragStart(e: React.DragEvent) {
-    e.dataTransfer.setData('text/task-id', task.id)
-    e.dataTransfer.effectAllowed = 'move'
-  }
 
   function cancelTimer() {
     if (timerRef.current != null) { window.clearTimeout(timerRef.current); timerRef.current = null }
@@ -89,13 +66,19 @@ export function TaskRow({ task }: { task: Task }) {
   return (
     <>
       <div
-        className={`task-row ${pendingDone ? 'is-done' : ''} ${expanded ? 'is-expanded' : ''} ${draggable ? 'is-draggable' : ''}`}
-        draggable={draggable}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseLeave={clearLongPress}
-        onDragStart={onDragStart}
-        onClick={() => toggleExpand(task.id)}
+        className={`task-row ${pendingDone ? 'is-done' : ''} ${expanded ? 'is-expanded' : ''} ${isDragging ? 'is-dragging' : ''}`}
+        onPointerDown={(e) => {
+          // 忽略圆圈、操作按钮等可交互子元素；只在主体区域响应拖拽
+          const t = e.target as HTMLElement
+          if (t.closest('.task-check, .row-action')) return
+          onPointerDownDrag?.(task.id, e)
+        }}
+        onClick={(e) => {
+          // 如果刚拖拽完释放，TodayView 会通过阻断本次 click 来避免误展开
+          const t = e.target as HTMLElement
+          if (t.closest('.task-check, .row-action')) return
+          toggleExpand(task.id)
+        }}
       >
         <button className="task-check" onClick={toggleDone} aria-label="完成">
           {pendingDone ? '●' : '○'}

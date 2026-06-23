@@ -113,8 +113,24 @@ body {
 }
 .row-action:hover { background: rgba(0,0,0,0.06); color: var(--text); }
 .task-row.is-expanded { background: rgba(0,0,0,0.03); }
-.task-row.is-draggable { background: rgba(0,122,255,0.08); cursor: grab; }
-.drop-target > .task-row { border-top: 2px solid var(--accent); }
+.task-row.is-dragging { opacity: 0.35; }
+.drop-indicator {
+  height: 2px; background: var(--accent); margin: 0 8px;
+  border-radius: 1px;
+}
+.drag-ghost {
+  position: fixed; z-index: 5000; pointer-events: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 8px 12px;
+  font-size: 13px; color: var(--text);
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  opacity: 0.9;
+}
+/* 拖拽中禁止文字选中 */
+body:has(.drag-ghost) { user-select: none; cursor: grabbing; }
 
 .subview-bar {
   display: flex; align-items: center; gap: 6px;
