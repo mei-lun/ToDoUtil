@@ -5,7 +5,7 @@ import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
 import { runDailyBackup, cleanOldBackups } from './storage/backup-service'
-import { initLogger } from './logger'
+import { initLogger, log } from './logger'
 import { startScheduler, stopScheduler } from './scheduler'
 import { setMainWindow, ensureOnScreen } from './window-manager'
 import { createTray, destroyTray } from './tray-manager'
@@ -76,7 +76,8 @@ app.whenReady().then(() => {
   createWindow()
   startScheduler()
   createTray()
-  registerShortcut()
+  const res = registerShortcut()
+  if (!res.ok) log.warn(`Failed to register global shortcut: ${res.accelerator}`)
 })
 
 app.on('before-quit', () => {
