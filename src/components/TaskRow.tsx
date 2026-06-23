@@ -7,6 +7,7 @@ import { api } from '../api'
 import { countSubtasks } from '../utils/subtasks'
 import { postponeOneDay, moveToPool, abandonTask } from '../utils/task-actions'
 import { TaskDetail } from './TaskDetail'
+import { DelayBadge } from './DelayBadge'
 
 const COMMIT_DELAY_MS = 2000
 
@@ -65,6 +66,7 @@ export function TaskRow({ task }: { task: Task }) {
         <button className="task-check" onClick={toggleDone} aria-label="完成">
           {pendingDone ? '●' : '○'}
         </button>
+        <DelayBadge originalPlannedDate={task.originalPlannedDate} />
         <span className="task-title">{task.title}</span>
         {sub.total > 0 && <span className="subtask-count">{sub.done}/{sub.total}</span>}
         {task.plannedTime && <span className="task-time">{task.plannedTime}</span>}

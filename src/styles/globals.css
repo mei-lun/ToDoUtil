@@ -89,6 +89,17 @@ body {
   color: var(--text-secondary); font-size: 12px; font-style: italic;
 }
 
+.delay-badge {
+  display: inline-block;
+  width: 8px; height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.delay-badge.lv-1 { background: var(--danger-1); }
+.delay-badge.lv-2 { background: var(--danger-2); }
+.delay-badge.lv-3 { background: var(--danger-3); }
+.delay-badge.lv-4 { background: var(--danger-4); }
+
 .subtask-count { font-size: 11px; color: var(--text-secondary); padding: 0 4px; }
 .row-actions { display: none; gap: 4px; margin-left: 4px; }
 .task-row:hover .row-actions { display: inline-flex; }
