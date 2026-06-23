@@ -225,3 +225,39 @@ body {
   font-size: 11px; color: var(--text-secondary);
   margin-top: 6px; text-align: right;
 }
+
+.settings-view { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.settings-body { padding: 12px; overflow-y: auto; font-size: 12px; }
+.settings-body section { margin-bottom: 16px; }
+.settings-body h3 {
+  font-size: 12px; color: var(--text-secondary);
+  margin-bottom: 6px; font-weight: 500;
+}
+.settings-body .row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 0; flex-wrap: wrap;
+}
+.settings-body .row.disabled { color: var(--text-secondary); }
+.settings-body code {
+  background: rgba(0,0,0,0.05); padding: 1px 6px;
+  border-radius: 3px; font-size: 11px;
+  word-break: break-all;
+}
+.settings-body button {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 2px 10px;
+  cursor: pointer; font-size: 12px;
+}
+.settings-body button:hover { background: rgba(0,0,0,0.04); }
+.settings-body input[type="number"] {
+  width: 64px; padding: 2px 6px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font: inherit; outline: none;
+}
+.settings-body input[type="number"]:focus { border-color: var(--accent); }
+.shortcut-input {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 2px 6px; font: inherit; outline: none;
+  min-width: 160px; background: var(--bg-elevated);
+}
+.shortcut-input:focus { border-color: var(--accent); }

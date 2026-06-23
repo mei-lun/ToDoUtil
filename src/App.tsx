@@ -7,6 +7,7 @@ import { TopBar } from './components/TopBar'
 import { TodayView } from './views/TodayView'
 import { PoolView } from './views/PoolView'
 import { ArchiveView } from './views/ArchiveView'
+import { SettingsView } from './views/SettingsView'
 import { MoveModeOverlay } from './components/MoveModeOverlay'
 import { QuickAddOverlay } from './views/QuickAddOverlay'
 import { api } from './api'
@@ -72,6 +73,7 @@ export default function App() {
       {mode === 'date' && <TodayView />}
       {mode === 'pool' && <PoolView />}
       {mode === 'archive' && <ArchiveView />}
+      {mode === 'settings' && <SettingsView />}
       <MoveModeOverlay />
       <QuickAddOverlay />
     </div>

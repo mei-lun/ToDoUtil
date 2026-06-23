@@ -61,4 +61,11 @@ contextBridge.exposeInMainWorld('api', {
       return () => ipcRenderer.removeListener('quick-add:open', listener)
     },
   },
+  shell: {
+    openPath: (p: string): Promise<string> => ipcRenderer.invoke('shell:open-path', p),
+  },
+  app: {
+    restart: (): Promise<void> => ipcRenderer.invoke('app:restart'),
+    pickDir: (): Promise<string | null> => ipcRenderer.invoke('dialog:pick-dir'),
+  },
 })

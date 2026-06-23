@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron'
+import { ipcMain, BrowserWindow, app, dialog, shell } from 'electron'
 import * as tasksRepo from './storage/tasks-repo'
 import * as poolRepo from './storage/pool-repo'
 import * as archiveRepo from './storage/archive-repo'
@@ -38,5 +38,12 @@ export function registerIpcHandlers() {
   ipcMain.handle('window:top-state', () => isAlwaysOnTop())
   ipcMain.handle('window:enter-move', () => {
     BrowserWindow.getAllWindows().forEach(w => w.webContents.send('window:move-mode', true))
+  })
+
+  ipcMain.handle('shell:open-path', (_e, p: string) => shell.openPath(p))
+  ipcMain.handle('app:restart', () => { app.relaunch(); app.exit(0) })
+  ipcMain.handle('dialog:pick-dir', async () => {
+    const r = await dialog.showOpenDialog({ properties: ['openDirectory'] })
+    return r.canceled ? null : r.filePaths[0]
   })
 }

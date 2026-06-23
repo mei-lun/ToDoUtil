@@ -42,6 +42,13 @@ interface Api {
     viewSet(cb: (m: string) => void): () => void
     quickAddOpen(cb: () => void): () => void
   }
+  shell: {
+    openPath(p: string): Promise<string>
+  }
+  app: {
+    restart(): Promise<void>
+    pickDir(): Promise<string | null>
+  }
 }
 
 declare global {
