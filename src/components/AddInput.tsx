@@ -8,7 +8,6 @@ import { todayStr } from '../utils/date-utils'
 export function AddInput() {
   const open = useViewStore(s => s.addInputOpen)
   const setOpen = useViewStore(s => s.setAddInputOpen)
-  const currentDate = useViewStore(s => s.currentDate)
   const upsert = useTasksStore(s => s.upsert)
   const tasks = useTasksStore(s => s.tasks)
   const inputRef = useRef<HTMLInputElement>(null)
