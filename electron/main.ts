@@ -6,6 +6,7 @@ import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
 import { startScheduler, stopScheduler } from './scheduler'
 import { setMainWindow, ensureOnScreen } from './window-manager'
+import { createTray, destroyTray } from './tray-manager'
 
 const isDev = !app.isPackaged
 
@@ -37,6 +38,13 @@ function createWindow() {
     win.loadFile(path.join(__dirname, '../dist/index.html'))
   }
 
+  win.on('close', (e) => {
+    if (!(app as unknown as { isQuiting?: boolean }).isQuiting) {
+      e.preventDefault()
+      win.hide()
+    }
+  })
+
   setMainWindow(win)
   ensureOnScreen(win)
 }
@@ -53,9 +61,14 @@ app.whenReady().then(() => {
   registerIpcHandlers()
   createWindow()
   startScheduler()
+  createTray()
 })
 
-app.on('before-quit', () => stopScheduler())
+app.on('before-quit', () => {
+  ;(app as unknown as { isQuiting?: boolean }).isQuiting = true
+  destroyTray()
+  stopScheduler()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()

@@ -36,6 +36,16 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    const offView = api.on.viewSet((m) => {
+      useViewStore.getState().setMode(m as 'date' | 'pool' | 'archive' | 'settings')
+    })
+    const offQuick = api.on.quickAddOpen(() => {
+      useViewStore.getState().setQuickAddOpen(true)
+    })
+    return () => { offView(); offQuick() }
+  }, [])
+
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
       // If a local React handler (e.g. AddInput/MarkdownEditor) already called

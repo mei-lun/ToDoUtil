@@ -38,6 +38,10 @@ interface Api {
     enterMove(): Promise<void>
     onMoveMode(cb: (on: boolean) => void): () => void
   }
+  on: {
+    viewSet(cb: (m: string) => void): () => void
+    quickAddOpen(cb: () => void): () => void
+  }
 }
 
 declare global {

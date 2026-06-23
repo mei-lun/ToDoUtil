@@ -10,6 +10,7 @@ interface ViewState {
   editingTaskId: string | null
   addInputOpen: boolean
   moveMode: boolean
+  quickAddOpen: boolean
 
   setMode: (m: ViewMode) => void
   setDate: (d: string) => void
@@ -17,6 +18,7 @@ interface ViewState {
   setEditing: (id: string | null) => void
   setAddInputOpen: (b: boolean) => void
   setMoveMode: (b: boolean) => void
+  setQuickAddOpen: (b: boolean) => void
 }
 
 export const useViewStore = create<ViewState>((set) => ({
@@ -26,6 +28,7 @@ export const useViewStore = create<ViewState>((set) => ({
   editingTaskId: null,
   addInputOpen: false,
   moveMode: false,
+  quickAddOpen: false,
 
   setMode: (m) => set({ mode: m }),
   setDate: (d) => set({ currentDate: d, expandedTaskId: null }),
@@ -36,4 +39,5 @@ export const useViewStore = create<ViewState>((set) => ({
   setEditing: (id) => set({ editingTaskId: id }),
   setAddInputOpen: (b) => set({ addInputOpen: b }),
   setMoveMode: (b) => set({ moveMode: b }),
+  setQuickAddOpen: (b) => set({ quickAddOpen: b }),
 }))

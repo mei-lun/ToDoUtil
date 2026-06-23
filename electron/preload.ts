@@ -49,4 +49,16 @@ contextBridge.exposeInMainWorld('api', {
       return () => ipcRenderer.removeListener('window:move-mode', listener)
     },
   },
+  on: {
+    viewSet: (cb: (m: string) => void): (() => void) => {
+      const listener = (_: unknown, m: string) => cb(m)
+      ipcRenderer.on('view:set', listener)
+      return () => ipcRenderer.removeListener('view:set', listener)
+    },
+    quickAddOpen: (cb: () => void): (() => void) => {
+      const listener = () => cb()
+      ipcRenderer.on('quick-add:open', listener)
+      return () => ipcRenderer.removeListener('quick-add:open', listener)
+    },
+  },
 })
