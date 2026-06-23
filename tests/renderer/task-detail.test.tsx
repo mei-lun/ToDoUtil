@@ -142,4 +142,31 @@ describe('TaskDetail integration', () => {
     expect(useViewStore.getState().editingTaskId).toBeNull()
     confirmSpy.mockRestore()
   })
+
+  it('subtask toggle followed by edit-mode blur does NOT revert the toggle', async () => {
+    const task = makeTask('- [ ] foo')
+    apiState.tasks = [task]
+    await useTasksStore.getState().load()
+
+    const { rerender } = render(<TaskDetail task={task} />)
+
+    // Toggle the subtask checkbox in the rendered view → store upserts "- [x] foo"
+    const cb = document.querySelector('.md-view input[type="checkbox"]') as HTMLInputElement
+    await act(async () => { cb.click() })
+    expect(apiState.tasks[0].detail).toBe('- [x] foo')
+
+    // Parent re-renders with the updated task and the user clicks ✎ to edit.
+    const updated = useTasksStore.getState().tasks.find(t => t.id === 't1')!
+    await act(async () => {
+      useViewStore.setState({ editingTaskId: 't1' })
+      rerender(<TaskDetail task={updated} />)
+    })
+
+    // Blur the editor without typing anything.
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    await act(async () => { fireEvent.blur(ta) })
+
+    // The toggle must NOT have been reverted by a stale draft.
+    expect(apiState.tasks[0].detail).toBe('- [x] foo')
+  })
 })

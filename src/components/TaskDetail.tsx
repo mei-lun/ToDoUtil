@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { MarkdownView } from './MarkdownView'
 import { MarkdownEditor } from './MarkdownEditor'
 import { useTasksStore } from '../store/tasks-store'
@@ -9,11 +8,9 @@ export function TaskDetail({ task }: { task: Task }) {
   const upsert = useTasksStore(s => s.upsert)
   const editing = useViewStore(s => s.editingTaskId) === task.id
   const setEditing = useViewStore(s => s.setEditing)
-  const [localDraft, setLocalDraft] = useState(task.detail)
 
   async function saveDetail(next: string) {
     await upsert({ ...task, detail: next })
-    setLocalDraft(next)
     setEditing(null)
   }
 
@@ -21,7 +18,7 @@ export function TaskDetail({ task }: { task: Task }) {
     <div className="task-detail" onClick={(e) => e.stopPropagation()}>
       {editing ? (
         <MarkdownEditor
-          initial={localDraft}
+          initial={task.detail}
           onSave={saveDetail}
           onCancel={() => setEditing(null)}
         />
