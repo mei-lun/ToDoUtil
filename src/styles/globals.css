@@ -205,3 +205,23 @@ body {
   -webkit-app-region: no-drag;
   pointer-events: none;
 }
+
+.quick-add-mask {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center; z-index: 2000;
+}
+.quick-add-box {
+  background: #fff; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md); padding: 12px;
+  width: 80%; max-width: 240px;
+}
+.quick-add-input {
+  width: 100%; padding: 8px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); font: inherit; outline: none;
+  background: var(--bg-elevated); color: var(--text);
+}
+.quick-add-input:focus { border-color: var(--accent); }
+.quick-add-hint {
+  font-size: 11px; color: var(--text-secondary);
+  margin-top: 6px; text-align: right;
+}

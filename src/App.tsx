@@ -8,6 +8,7 @@ import { TodayView } from './views/TodayView'
 import { PoolView } from './views/PoolView'
 import { ArchiveView } from './views/ArchiveView'
 import { MoveModeOverlay } from './components/MoveModeOverlay'
+import { QuickAddOverlay } from './views/QuickAddOverlay'
 import { api } from './api'
 
 export default function App() {
@@ -53,6 +54,7 @@ export default function App() {
       // the cascade single-action.
       if (e.defaultPrevented) return
       const v = useViewStore.getState()
+      if (v.quickAddOpen) { v.setQuickAddOpen(false); return }
       if (v.moveMode) { v.setMoveMode(false); return }
       if (v.addInputOpen) { v.setAddInputOpen(false); return }
       if (v.editingTaskId) { v.setEditing(null); return }
@@ -71,6 +73,7 @@ export default function App() {
       {mode === 'pool' && <PoolView />}
       {mode === 'archive' && <ArchiveView />}
       <MoveModeOverlay />
+      <QuickAddOverlay />
     </div>
   )
 }
