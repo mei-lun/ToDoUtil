@@ -173,3 +173,19 @@ body {
   background: var(--bg-elevated); color: var(--text);
 }
 .archive-search:focus { border-color: var(--accent); }
+
+.heatmap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.heatmap-range { display: flex; gap: 4px; padding: 6px 12px; border-bottom: 1px solid var(--border); }
+.heatmap-scroll { flex: 1; overflow: auto; padding: 8px; }
+.heatmap-table { border-collapse: collapse; font-size: 10px; }
+.heatmap-task-col {
+  position: sticky; left: 0; background: var(--bg);
+  padding: 2px 6px; text-align: left; max-width: 120px; min-width: 80px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.heatmap-day-col { width: 10px; min-width: 10px; padding: 0; text-align: center; color: var(--text-secondary); }
+.heatmap-cell { width: 10px; height: 14px; border: 1px solid transparent; }
+.cell-empty { background: transparent; }
+.cell-filled { background: var(--accent); border-color: rgba(0,0,0,0.05); }
+.cell-pooled { background: rgba(0,122,255,0.2); border-color: rgba(0,0,0,0.05); }
+.cell-abandoned { background: var(--abandoned); border-color: rgba(0,0,0,0.05); }

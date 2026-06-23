@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useViewStore } from '../store/view-store'
 import { useArchiveStore } from '../store/archive-store'
 import { Timeline } from '../components/Timeline'
+import { HeatmapGrid } from '../components/HeatmapGrid'
 
 export function ArchiveView() {
   const setMode = useViewStore(s => s.setMode)
@@ -30,7 +31,7 @@ export function ArchiveView() {
         />
       </div>
       {view === 'timeline' && <Timeline />}
-      {view === 'grid' && <div className="empty-state">网格视图（Phase 10 实现）</div>}
+      {view === 'grid' && <HeatmapGrid />}
     </div>
   )
 }
