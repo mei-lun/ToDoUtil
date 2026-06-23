@@ -22,4 +22,10 @@ contextBridge.exposeInMainWorld('api', {
     load:   (): Promise<Config>     => ipcRenderer.invoke('config:load'),
     save:   (c: Config): Promise<void> => ipcRenderer.invoke('config:save', c),
   },
+  attach: {
+    save:       (taskId: string, dataBase64: string, ext: string): Promise<string> =>
+      ipcRenderer.invoke('attach:save', taskId, dataBase64, ext),
+    removeTask: (taskId: string): Promise<void> =>
+      ipcRenderer.invoke('attach:remove-task', taskId),
+  },
 })

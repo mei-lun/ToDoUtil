@@ -21,6 +21,10 @@ interface Api {
     load(): Promise<Config>
     save(c: Config): Promise<void>
   }
+  attach: {
+    save(taskId: string, dataBase64: string, ext: string): Promise<string>
+    removeTask(taskId: string): Promise<void>
+  }
 }
 
 declare global {

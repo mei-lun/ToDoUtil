@@ -2,6 +2,7 @@ import { ipcMain } from 'electron'
 import * as tasksRepo from './storage/tasks-repo'
 import * as poolRepo from './storage/pool-repo'
 import * as archiveRepo from './storage/archive-repo'
+import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
 import type { Task, Config } from '../src/types'
 
@@ -21,4 +22,10 @@ export function registerIpcHandlers() {
 
   ipcMain.handle('config:load',   () => loadConfig())
   ipcMain.handle('config:save',   (_e, c: Config) => saveConfig(c))
+
+  ipcMain.handle('attach:save', (_e, taskId: string, dataBase64: string, ext: string) => {
+    const buf = Buffer.from(dataBase64, 'base64')
+    return att.saveImageBuffer(taskId, buf, ext)
+  })
+  ipcMain.handle('attach:remove-task', (_e, taskId: string) => att.removeTaskAttachments(taskId))
 }
