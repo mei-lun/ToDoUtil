@@ -3,6 +3,7 @@ import { loadConfig, saveConfig } from './config'
 
 let mainWindow: BrowserWindow | null = null
 let prevBoundsBeforeGrid: { width: number; height: number; x: number; y: number } | null = null
+let persistTimer: NodeJS.Timeout | null = null
 
 export function setMainWindow(win: BrowserWindow) {
   mainWindow = win
@@ -15,16 +16,20 @@ export function getMainWindow(): BrowserWindow | null {
 }
 
 export function persistBounds() {
-  if (!mainWindow) return
-  const [w, h] = mainWindow.getSize()
-  const [x, y] = mainWindow.getPosition()
-  const cfg = loadConfig()
-  if (prevBoundsBeforeGrid) {
-    // 在 grid 模式中，保存到 archiveGridBounds，不要覆盖窄态的 windowBounds
-    saveConfig({ ...cfg, archiveGridBounds: { width: w, height: h } })
-  } else {
-    saveConfig({ ...cfg, windowBounds: { width: w, height: h, x, y } })
-  }
+  if (persistTimer) clearTimeout(persistTimer)
+  persistTimer = setTimeout(() => {
+    persistTimer = null
+    if (!mainWindow) return
+    const [w, h] = mainWindow.getSize()
+    const [x, y] = mainWindow.getPosition()
+    const cfg = loadConfig()
+    if (prevBoundsBeforeGrid) {
+      // 在 grid 模式中，保存到 archiveGridBounds，不要覆盖窄态的 windowBounds
+      saveConfig({ ...cfg, archiveGridBounds: { width: w, height: h } })
+    } else {
+      saveConfig({ ...cfg, windowBounds: { width: w, height: h, x, y } })
+    }
+  }, 500)
 }
 
 export function enterGridWidth() {
