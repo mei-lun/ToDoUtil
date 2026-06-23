@@ -32,7 +32,8 @@ export function MarkdownEditor({ initial, onSave, onCancel }: Props) {
   }
 
   function onBlur() {
-    onSave(value)
+    if (value !== initial) onSave(value)
+    else onCancel()
   }
 
   return (
