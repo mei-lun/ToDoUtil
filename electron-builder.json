@@ -1,0 +1,22 @@
+{
+  "appId": "com.todoutil.app",
+  "productName": "ToDoUtil",
+  "directories": { "output": "release/${version}" },
+  "files": [
+    "dist/**/*",
+    "dist-electron/**/*",
+    "electron/assets/**/*"
+  ],
+  "extraResources": [
+    { "from": "electron/assets", "to": "assets" }
+  ],
+  "win": {
+    "target": ["nsis"],
+    "icon": "electron/assets/tray-icon.png"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true
+  }
+}
