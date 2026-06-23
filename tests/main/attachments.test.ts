@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { setDataDir } from '../../electron/storage/paths'
-import { saveImageBuffer, removeTaskAttachments } from '../../electron/storage/attachments'
+import { saveImageBuffer, removeTaskAttachments, resolveAttachmentPath } from '../../electron/storage/attachments'
 
 let tmp: string
 beforeEach(() => {
@@ -33,5 +33,21 @@ describe('attachments', () => {
     saveImageBuffer('t', Buffer.from([0]), 'png')
     removeTaskAttachments('t')
     expect(fs.existsSync(path.join(tmp, 'attachments', 't'))).toBe(false)
+  })
+})
+
+describe('resolveAttachmentPath', () => {
+  it('resolves valid relative path', () => {
+    const dir = '/tmp/data'
+    expect(resolveAttachmentPath(dir, 'task-1/abc.png')).toMatch(/attachments[\\\/]task-1[\\\/]abc\.png$/)
+  })
+  it('rejects ../ traversal', () => {
+    expect(resolveAttachmentPath('/tmp/data', '../../../etc/passwd')).toBeNull()
+  })
+  it('rejects percent-encoded ../ traversal', () => {
+    expect(resolveAttachmentPath('/tmp/data', '%2e%2e/%2e%2e/secret')).toBeNull()
+  })
+  it('rejects malformed URI', () => {
+    expect(resolveAttachmentPath('/tmp/data', '%E0%A4%A')).toBeNull()
   })
 })

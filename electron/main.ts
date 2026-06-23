@@ -3,6 +3,7 @@ import path from 'node:path'
 import { setDataDir } from './storage/paths'
 import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
+import { resolveAttachmentPath } from './storage/attachments'
 
 const isDev = !app.isPackaged
 
@@ -40,8 +41,9 @@ app.whenReady().then(() => {
   const dataDir = setDataDir(cfg.dataDir)
   protocol.registerFileProtocol('attachments', (request, callback) => {
     const url = request.url.replace(/^attachments:\/\//, '')
-    const decoded = decodeURIComponent(url)
-    callback({ path: path.join(dataDir, 'attachments', decoded) })
+    const resolved = resolveAttachmentPath(dataDir, url)
+    if (!resolved) return callback({ error: -10 }) // net::ERR_ACCESS_DENIED
+    callback({ path: resolved })
   })
   registerIpcHandlers()
   createWindow()
