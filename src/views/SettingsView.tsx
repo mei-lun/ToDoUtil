@@ -20,10 +20,10 @@ export function SettingsView() {
     if (e.altKey) parts.push('Alt')
     if (e.shiftKey) parts.push('Shift')
     const k = e.key
-    if (!['Control', 'Meta', 'Alt', 'Shift'].includes(k)) {
-      parts.push(k.length === 1 ? k.toUpperCase() : k)
-    }
-    if (parts.length >= 2) setShortcutDraft(parts.join('+'))
+    const isModifier = ['Control', 'Meta', 'Alt', 'Shift'].includes(k)
+    if (!isModifier) parts.push(k.length === 1 ? k.toUpperCase() : k)
+    // require at least one modifier AND one non-modifier
+    if (parts.length >= 2 && !isModifier) setShortcutDraft(parts.join('+'))
   }
 
   return (
