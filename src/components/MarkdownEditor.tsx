@@ -18,11 +18,17 @@ const IMG_EXT_BY_MIME: Record<string, string> = {
 }
 
 async function fileToBase64(file: File): Promise<string> {
-  const buf = await file.arrayBuffer()
-  const bin = new Uint8Array(buf)
-  let s = ''
-  for (let i = 0; i < bin.length; i++) s += String.fromCharCode(bin[i])
-  return btoa(s)
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader()
+    fr.onload = () => {
+      const result = fr.result as string
+      // strip "data:<mime>;base64," prefix
+      const comma = result.indexOf(',')
+      resolve(comma >= 0 ? result.slice(comma + 1) : result)
+    }
+    fr.onerror = () => reject(fr.error)
+    fr.readAsDataURL(file)
+  })
 }
 
 export function MarkdownEditor({ initial, taskId, onSave, onCancel }: Props) {
