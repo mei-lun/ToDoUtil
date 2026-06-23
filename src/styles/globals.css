@@ -79,3 +79,23 @@ body {
   background: var(--bg-elevated); color: var(--text);
 }
 .md-editor:focus { border-color: var(--accent); }
+
+.task-detail {
+  padding: 8px 12px 12px 38px;
+  background: rgba(0,0,0,0.02);
+  border-bottom: 1px solid var(--border);
+}
+.empty-detail {
+  color: var(--text-secondary); font-size: 12px; font-style: italic;
+}
+
+.subtask-count { font-size: 11px; color: var(--text-secondary); padding: 0 4px; }
+.row-actions { display: none; gap: 4px; margin-left: 4px; }
+.task-row:hover .row-actions { display: inline-flex; }
+.row-action {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 12px; padding: 2px 4px; color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+}
+.row-action:hover { background: rgba(0,0,0,0.06); color: var(--text); }
+.task-row.is-expanded { background: rgba(0,0,0,0.03); }
