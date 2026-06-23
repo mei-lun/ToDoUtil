@@ -15,6 +15,11 @@ export async function moveToPool(task: Task): Promise<void> {
 }
 
 export async function abandonTask(task: Task): Promise<void> {
+  // NOTE: attachments/<task.id>/ is intentionally NOT removed here.
+  // Archive markdown references attachments:// URLs that must keep
+  // resolving when the user reopens the archived entry. A periodic
+  // orphan-scan (planned for a future phase) is the right cleanup
+  // path for entries that are truly unreferenced.
   const next: Task = { ...task, status: 'abandoned', doneAt: new Date().toISOString() }
   await api.archive.append(next)
   await api.tasks.delete(task.id)
