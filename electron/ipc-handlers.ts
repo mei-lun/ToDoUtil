@@ -6,7 +6,12 @@ import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
 import { getDataDir } from './storage/paths'
 import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop, hideMain, showMain, isAlwaysOnTop } from './window-manager'
+import { refreshMenu as refreshTrayMenu } from './tray-manager'
 import type { Task, Config } from '../src/types'
+
+function safeRefreshTray() {
+  try { refreshTrayMenu() } catch { /* tray not ready yet */ }
+}
 
 export function registerIpcHandlers() {
   ipcMain.handle('tasks:list',    () => tasksRepo.listTasks())
@@ -15,8 +20,8 @@ export function registerIpcHandlers() {
   ipcMain.handle('tasks:bulk',    (_e, ts: Task[]) => tasksRepo.bulkReplace(ts))
 
   ipcMain.handle('pool:list',     () => poolRepo.listPool())
-  ipcMain.handle('pool:add',      (_e, t: Task) => poolRepo.addToPool(t))
-  ipcMain.handle('pool:remove',   (_e, id: string) => poolRepo.removeFromPool(id))
+  ipcMain.handle('pool:add',      (_e, t: Task) => { poolRepo.addToPool(t); safeRefreshTray() })
+  ipcMain.handle('pool:remove',   (_e, id: string) => { poolRepo.removeFromPool(id); safeRefreshTray() })
 
   ipcMain.handle('archive:list',  () => archiveRepo.listArchive())
   ipcMain.handle('archive:append',(_e, t: Task) => archiveRepo.appendToArchive(t))
