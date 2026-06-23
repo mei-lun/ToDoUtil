@@ -6,7 +6,9 @@ import { listPool } from './storage/pool-repo'
 let tray: Tray | null = null
 
 export function createTray() {
-  const iconPath = path.join(__dirname, 'assets', 'tray-icon.png')
+  const iconPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets', 'tray-icon.png')
+    : path.join(__dirname, '../electron/assets/tray-icon.png')
   const icon = nativeImage.createFromPath(iconPath)
   tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon)
   tray.setToolTip('ToDoUtil')
