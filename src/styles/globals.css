@@ -189,3 +189,19 @@ body {
 .cell-filled { background: var(--accent); border-color: rgba(0,0,0,0.05); }
 .cell-pooled { background: rgba(0,122,255,0.2); border-color: rgba(0,0,0,0.05); }
 .cell-abandoned { background: var(--abandoned); border-color: rgba(0,0,0,0.05); }
+
+.move-mask {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,122,255,0.15);
+  -webkit-app-region: drag;
+  cursor: grab;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: auto;
+}
+.move-hint {
+  background: rgba(0,0,0,0.6); color: #fff;
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  font-size: 11px;
+  -webkit-app-region: no-drag;
+  pointer-events: none;
+}

@@ -1,10 +1,10 @@
-import { ipcMain } from 'electron'
+import { ipcMain, BrowserWindow } from 'electron'
 import * as tasksRepo from './storage/tasks-repo'
 import * as poolRepo from './storage/pool-repo'
 import * as archiveRepo from './storage/archive-repo'
 import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
-import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop } from './window-manager'
+import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop, hideMain, showMain, isAlwaysOnTop } from './window-manager'
 import type { Task, Config } from '../src/types'
 
 export function registerIpcHandlers() {
@@ -33,4 +33,10 @@ export function registerIpcHandlers() {
   ipcMain.handle('window:enter-grid', () => enterGridWidth())
   ipcMain.handle('window:exit-grid', () => exitGridWidth())
   ipcMain.handle('window:toggle-top', () => toggleAlwaysOnTop())
+  ipcMain.handle('window:hide', () => hideMain())
+  ipcMain.handle('window:show', () => showMain())
+  ipcMain.handle('window:top-state', () => isAlwaysOnTop())
+  ipcMain.handle('window:enter-move', () => {
+    BrowserWindow.getAllWindows().forEach(w => w.webContents.send('window:move-mode', true))
+  })
 }

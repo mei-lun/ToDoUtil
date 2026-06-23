@@ -39,5 +39,14 @@ contextBridge.exposeInMainWorld('api', {
     enterGrid: (): Promise<void> => ipcRenderer.invoke('window:enter-grid'),
     exitGrid:  (): Promise<void> => ipcRenderer.invoke('window:exit-grid'),
     toggleTop: (): Promise<boolean> => ipcRenderer.invoke('window:toggle-top'),
+    hide:      (): Promise<void> => ipcRenderer.invoke('window:hide'),
+    show:      (): Promise<void> => ipcRenderer.invoke('window:show'),
+    topState:  (): Promise<boolean> => ipcRenderer.invoke('window:top-state'),
+    enterMove: (): Promise<void> => ipcRenderer.invoke('window:enter-move'),
+    onMoveMode: (cb: (on: boolean) => void): (() => void) => {
+      const listener = (_: unknown, on: boolean) => cb(on)
+      ipcRenderer.on('window:move-mode', listener)
+      return () => ipcRenderer.removeListener('window:move-mode', listener)
+    },
   },
 })

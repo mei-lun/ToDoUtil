@@ -7,6 +7,7 @@ import { TopBar } from './components/TopBar'
 import { TodayView } from './views/TodayView'
 import { PoolView } from './views/PoolView'
 import { ArchiveView } from './views/ArchiveView'
+import { MoveModeOverlay } from './components/MoveModeOverlay'
 import { api } from './api'
 
 export default function App() {
@@ -27,6 +28,31 @@ export default function App() {
     return () => off()
   }, [])
 
+  useEffect(() => {
+    const offMove = api.window.onMoveMode((on) => {
+      useViewStore.getState().setMoveMode(on)
+    })
+    return () => offMove()
+  }, [])
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      // If a local React handler (e.g. AddInput/MarkdownEditor) already called
+      // preventDefault, treat the Esc as handled and skip the cascade — keeps
+      // the cascade single-action.
+      if (e.defaultPrevented) return
+      const v = useViewStore.getState()
+      if (v.moveMode) { v.setMoveMode(false); return }
+      if (v.addInputOpen) { v.setAddInputOpen(false); return }
+      if (v.editingTaskId) { v.setEditing(null); return }
+      if (v.expandedTaskId) { v.toggleExpand(v.expandedTaskId); return }
+      api.window.hide()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
   return (
     <div className="app">
       <AddInput />
@@ -34,6 +60,7 @@ export default function App() {
       {mode === 'date' && <TodayView />}
       {mode === 'pool' && <PoolView />}
       {mode === 'archive' && <ArchiveView />}
+      <MoveModeOverlay />
     </div>
   )
 }

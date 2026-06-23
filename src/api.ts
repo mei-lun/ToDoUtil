@@ -32,6 +32,11 @@ interface Api {
     enterGrid(): Promise<void>
     exitGrid(): Promise<void>
     toggleTop(): Promise<boolean>
+    hide(): Promise<void>
+    show(): Promise<void>
+    topState(): Promise<boolean>
+    enterMove(): Promise<void>
+    onMoveMode(cb: (on: boolean) => void): () => void
   }
 }
 

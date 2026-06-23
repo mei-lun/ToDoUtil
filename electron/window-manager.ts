@@ -58,6 +58,18 @@ export function toggleAlwaysOnTop(): boolean {
   return next
 }
 
+export function hideMain() {
+  mainWindow?.hide()
+}
+
+export function showMain() {
+  mainWindow?.show()
+}
+
+export function isAlwaysOnTop(): boolean {
+  return mainWindow?.isAlwaysOnTop() ?? false
+}
+
 export function ensureOnScreen(win: BrowserWindow) {
   const { workArea } = screen.getPrimaryDisplay()
   const b = win.getBounds()
