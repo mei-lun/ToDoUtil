@@ -4,6 +4,7 @@ import { setDataDir } from './storage/paths'
 import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
+import { runDailyBackup, cleanOldBackups } from './storage/backup-service'
 import { startScheduler, stopScheduler } from './scheduler'
 import { setMainWindow, ensureOnScreen } from './window-manager'
 import { createTray, destroyTray } from './tray-manager'
@@ -53,6 +54,16 @@ function createWindow() {
 app.whenReady().then(() => {
   const cfg = loadConfig()
   const dataDir = setDataDir(cfg.dataDir)
+  const today = (() => {
+    const d = new Date()
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  })()
+  try {
+    runDailyBackup(today)
+    cleanOldBackups(today, cfg.backupRetentionDays)
+  } catch (err) {
+    console.error('backup failed', err)
+  }
   protocol.registerFileProtocol('attachments', (request, callback) => {
     const url = request.url.replace(/^attachments:\/\//, '')
     const resolved = resolveAttachmentPath(dataDir, url)
