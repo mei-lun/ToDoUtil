@@ -5,6 +5,7 @@ import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
 import { runDailyBackup, cleanOldBackups } from './storage/backup-service'
+import { initLogger } from './logger'
 import { startScheduler, stopScheduler } from './scheduler'
 import { setMainWindow, ensureOnScreen } from './window-manager'
 import { createTray, destroyTray } from './tray-manager'
@@ -54,6 +55,7 @@ function createWindow() {
 app.whenReady().then(() => {
   const cfg = loadConfig()
   const dataDir = setDataDir(cfg.dataDir)
+  initLogger()
   const today = (() => {
     const d = new Date()
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
