@@ -75,6 +75,18 @@ export function isAlwaysOnTop(): boolean {
   return mainWindow?.isAlwaysOnTop() ?? false
 }
 
+export function autoFitHeight(neededHeight: number): void {
+  if (!mainWindow) return
+  if (prevBoundsBeforeGrid) return // 归档网格模式中不自动调整
+  const { workArea } = screen.getPrimaryDisplay()
+  const cap = workArea.height - 40
+  const target = Math.min(Math.max(neededHeight, 180), cap)
+  const [w, curH] = mainWindow.getSize()
+  if (target <= curH) return // 只长不缩
+  const [x, y] = mainWindow.getPosition()
+  mainWindow.setBounds({ width: w, height: target, x, y })
+}
+
 export function ensureOnScreen(win: BrowserWindow) {
   const { workArea } = screen.getPrimaryDisplay()
   const b = win.getBounds()

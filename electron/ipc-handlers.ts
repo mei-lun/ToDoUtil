@@ -5,7 +5,7 @@ import * as archiveRepo from './storage/archive-repo'
 import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
 import { getDataDir } from './storage/paths'
-import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop, hideMain, showMain, isAlwaysOnTop } from './window-manager'
+import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop, hideMain, showMain, isAlwaysOnTop, autoFitHeight } from './window-manager'
 import { refreshMenu as refreshTrayMenu } from './tray-manager'
 import type { Task, Config } from '../src/types'
 
@@ -42,6 +42,7 @@ export function registerIpcHandlers() {
   ipcMain.handle('window:hide', () => hideMain())
   ipcMain.handle('window:show', () => showMain())
   ipcMain.handle('window:top-state', () => isAlwaysOnTop())
+  ipcMain.handle('window:autofit', (_e, neededHeight: number) => autoFitHeight(neededHeight))
   ipcMain.handle('window:enter-move', () => {
     BrowserWindow.getAllWindows().forEach(w => w.webContents.send('window:move-mode', true))
   })

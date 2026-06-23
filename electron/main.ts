@@ -24,7 +24,7 @@ function createWindow() {
     transparent: false,
     resizable: true,
     minWidth: 240,
-    minHeight: 360,
+    minHeight: 180,
     alwaysOnTop: cfg.alwaysOnTop,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

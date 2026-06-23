@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTasksStore } from '../store/tasks-store'
 import { useViewStore } from '../store/view-store'
 import { TaskRow } from '../components/TaskRow'
@@ -38,20 +38,45 @@ export function TodayView() {
     await reload()
   }
 
+  const viewRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const inner = innerRef.current
+    const view = viewRef.current
+    if (!inner || !view) return
+    let raf = 0
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const app = view.closest('.app') as HTMLElement | null
+        const appRect = app?.getBoundingClientRect()
+        const viewRect = view.getBoundingClientRect()
+        const overhead = appRect ? (viewRect.top - appRect.top) : 80
+        const needed = Math.ceil(overhead + inner.offsetHeight + 8)
+        api.window.autofit(needed)
+      })
+    })
+    ro.observe(inner)
+    return () => { ro.disconnect(); cancelAnimationFrame(raf) }
+  }, [])
+
   return (
-    <div className="today-view">
-      {visible.length === 0 && <div className="empty-state">还没有任务</div>}
-      {visible.map(t => (
-        <div
-          key={t.id}
-          onDragOver={(e) => { e.preventDefault(); setDragOverId(t.id) }}
-          onDragLeave={() => setDragOverId((cur) => (cur === t.id ? null : cur))}
-          onDrop={(e) => onDrop(e, t.id)}
-          className={dragOverId === t.id ? 'drop-target' : ''}
-        >
-          <TaskRow task={t} />
-        </div>
-      ))}
+    <div ref={viewRef} className="today-view">
+      <div ref={innerRef} className="today-list">
+        {visible.length === 0 && <div className="empty-state">还没有任务</div>}
+        {visible.map(t => (
+          <div
+            key={t.id}
+            onDragOver={(e) => { e.preventDefault(); setDragOverId(t.id) }}
+            onDragLeave={() => setDragOverId((cur) => (cur === t.id ? null : cur))}
+            onDrop={(e) => onDrop(e, t.id)}
+            className={dragOverId === t.id ? 'drop-target' : ''}
+          >
+            <TaskRow task={t} />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

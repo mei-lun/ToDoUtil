@@ -36,6 +36,7 @@ interface Api {
     show(): Promise<void>
     topState(): Promise<boolean>
     enterMove(): Promise<void>
+    autofit(h: number): Promise<void>
     onMoveMode(cb: (on: boolean) => void): () => void
   }
   on: {

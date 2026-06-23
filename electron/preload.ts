@@ -43,6 +43,7 @@ contextBridge.exposeInMainWorld('api', {
     show:      (): Promise<void> => ipcRenderer.invoke('window:show'),
     topState:  (): Promise<boolean> => ipcRenderer.invoke('window:top-state'),
     enterMove: (): Promise<void> => ipcRenderer.invoke('window:enter-move'),
+    autofit:   (h: number): Promise<void> => ipcRenderer.invoke('window:autofit', h),
     onMoveMode: (cb: (on: boolean) => void): (() => void) => {
       const listener = (_: unknown, on: boolean) => cb(on)
       ipcRenderer.on('window:move-mode', listener)
