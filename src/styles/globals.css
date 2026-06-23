@@ -54,3 +54,8 @@ body {
 .task-row.is-done .task-check { color: var(--done); }
 .task-title { flex: 1; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .task-time { font-size: 11px; color: var(--text-secondary); }
+
+.today-view { flex: 1; overflow-y: auto; }
+.empty-state { padding: 40px 12px; text-align: center; color: var(--text-secondary); font-size: 12px; }
+
+.app { display: flex; flex-direction: column; height: 100vh; background: var(--bg); }

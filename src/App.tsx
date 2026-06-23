@@ -1,8 +1,27 @@
-import { useEffect, useState } from 'react'
-import { api } from './api'
+import { useEffect } from 'react'
+import { useTasksStore } from './store/tasks-store'
+import { usePoolStore } from './store/pool-store'
+import { useViewStore } from './store/view-store'
+import { AddInput } from './components/AddInput'
+import { TopBar } from './components/TopBar'
+import { TodayView } from './views/TodayView'
 
 export default function App() {
-  const [count, setCount] = useState(0)
-  useEffect(() => { api.tasks.list().then(t => setCount(t.length)) }, [])
-  return <div style={{ padding: 12 }}>Tasks: {count}</div>
+  const loadTasks = useTasksStore(s => s.load)
+  const loadPool = usePoolStore(s => s.load)
+  const poolCount = usePoolStore(s => s.pool.length)
+  const mode = useViewStore(s => s.mode)
+
+  useEffect(() => {
+    loadTasks()
+    loadPool()
+  }, [])
+
+  return (
+    <div className="app">
+      <AddInput />
+      <TopBar poolCount={poolCount} />
+      {mode === 'date' && <TodayView />}
+    </div>
+  )
 }
