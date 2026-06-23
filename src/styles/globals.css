@@ -8,3 +8,17 @@ body {
   user-select: none;
   overflow: hidden;
 }
+
+.add-input { padding: 8px 12px; }
+.add-btn {
+  width: 26px; height: 26px; border-radius: var(--radius-sm);
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text-secondary); font-size: 16px;
+}
+.add-btn:hover { background: rgba(0,0,0,0.05); color: var(--text); }
+.add-input-field {
+  width: 100%; padding: 6px 10px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--bg-elevated);
+  font: inherit; color: var(--text); outline: none;
+}
+.add-input-field:focus { border-color: var(--accent); }
