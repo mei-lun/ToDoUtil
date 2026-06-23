@@ -145,3 +145,18 @@ body {
   background: transparent; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px;
 }
 .popover-actions button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.timeline { overflow-y: auto; flex: 1; }
+.timeline-group { padding: 4px 0; }
+.timeline-day { font-size: 11px; color: var(--text-secondary); padding: 4px 12px; }
+.archive-row { border-bottom: 1px solid var(--border); }
+.archive-line { display: flex; align-items: center; gap: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; }
+.archive-line:hover { background: rgba(0,0,0,0.03); }
+.archive-icon { width: 12px; color: var(--done); }
+.archive-row.is-abandoned .archive-icon { color: var(--abandoned); }
+.archive-row.is-abandoned .archive-title { color: var(--text-secondary); text-decoration: line-through; }
+.archive-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.archive-bar { height: 8px; background: var(--accent); border-radius: 2px; flex-shrink: 0; }
+.archive-row.is-abandoned .archive-bar { background: var(--abandoned); }
+.archive-days { font-size: 11px; color: var(--text-secondary); width: 36px; text-align: right; }
+.archive-detail { padding: 8px 12px 12px 30px; background: rgba(0,0,0,0.02); }
