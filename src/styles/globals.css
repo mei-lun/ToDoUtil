@@ -70,3 +70,12 @@ body {
 .md-view blockquote { border-left: 3px solid var(--border); padding-left: 8px; color: var(--text-secondary); }
 .md-view a { color: var(--accent); text-decoration: none; }
 .md-view a:hover { text-decoration: underline; }
+
+.md-editor {
+  width: 100%; min-height: 120px;
+  padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px; resize: vertical; outline: none;
+  background: var(--bg-elevated); color: var(--text);
+}
+.md-editor:focus { border-color: var(--accent); }
