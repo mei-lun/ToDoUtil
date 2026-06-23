@@ -61,14 +61,18 @@ export function TodayView() {
   }
 
   // 计算当前鼠标位置 → 应插入到哪个 task.id 之前（null = 插末尾）
+  // 使用 .task-row 自身的中线，避免 indicator 占位让 wrapper 高度跳动导致命中点抖动。
   function calcInsertBefore(clientY: number): string | null {
     const list = listRef.current
     if (!list) return null
-    const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-row-id]'))
-    for (const r of rows) {
-      const rect = r.getBoundingClientRect()
+    const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-row-id] > .task-row'))
+    for (const row of rows) {
+      const rect = row.getBoundingClientRect()
       const mid = rect.top + rect.height / 2
-      if (clientY < mid) return r.dataset.rowId ?? null
+      if (clientY < mid) {
+        const wrapper = row.parentElement as HTMLElement | null
+        return wrapper?.dataset.rowId ?? null
+      }
     }
     return null
   }
