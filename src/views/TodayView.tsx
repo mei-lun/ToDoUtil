@@ -27,7 +27,6 @@ export function TodayView() {
   const reload = useTasksStore(s => s.load)
   const currentDate = useViewStore(s => s.currentDate)
   const [drag, setDrag] = useState<DragState | null>(null)
-  const listRef = useRef<HTMLDivElement>(null)
   const suppressClickRef = useRef(false)
 
   const visible = useMemo(() => {
@@ -64,7 +63,7 @@ export function TodayView() {
   // 关键点：必须排除被拖的行本身——否则鼠标落在源行上半部分时会命中源行，
   // 导致上拖看起来卡住。排除后源行的占位区域归给"下一行之前"，等价于"不动"。
   function calcInsertBefore(clientY: number, draggedId: string): string | null {
-    const list = listRef.current
+    const list = innerRef.current
     if (!list) return null
     const rows = Array.from(list.querySelectorAll<HTMLElement>('[data-row-id] > .task-row'))
       .filter(row => (row.parentElement as HTMLElement | null)?.dataset.rowId !== draggedId)
