@@ -6,6 +6,7 @@ import { AddInput } from './components/AddInput'
 import { TopBar } from './components/TopBar'
 import { TodayView } from './views/TodayView'
 import { PoolView } from './views/PoolView'
+import { api } from './api'
 
 export default function App() {
   const loadTasks = useTasksStore(s => s.load)
@@ -16,6 +17,13 @@ export default function App() {
   useEffect(() => {
     loadTasks()
     loadPool()
+  }, [])
+
+  useEffect(() => {
+    const off = api.events.onTasksRolled(() => {
+      useTasksStore.getState().load()
+    })
+    return () => off()
   }, [])
 
   return (

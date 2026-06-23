@@ -25,6 +25,9 @@ interface Api {
     save(taskId: string, dataBase64: string, ext: string): Promise<string>
     removeTask(taskId: string): Promise<void>
   }
+  events: {
+    onTasksRolled(cb: () => void): () => void
+  }
 }
 
 declare global {

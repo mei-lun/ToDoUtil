@@ -28,4 +28,11 @@ contextBridge.exposeInMainWorld('api', {
     removeTask: (taskId: string): Promise<void> =>
       ipcRenderer.invoke('attach:remove-task', taskId),
   },
+  events: {
+    onTasksRolled: (cb: () => void): (() => void) => {
+      const listener = () => cb()
+      ipcRenderer.on('tasks:rolled', listener)
+      return () => ipcRenderer.removeListener('tasks:rolled', listener)
+    },
+  },
 })

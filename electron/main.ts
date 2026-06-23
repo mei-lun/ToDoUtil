@@ -4,6 +4,7 @@ import { setDataDir } from './storage/paths'
 import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
+import { startScheduler, stopScheduler } from './scheduler'
 
 const isDev = !app.isPackaged
 
@@ -47,7 +48,10 @@ app.whenReady().then(() => {
   })
   registerIpcHandlers()
   createWindow()
+  startScheduler()
 })
+
+app.on('before-quit', () => stopScheduler())
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
