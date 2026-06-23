@@ -36,3 +36,21 @@ body {
 .icon-btn:hover { background: rgba(0,0,0,0.05); color: var(--text); }
 .date-label { font-size: 12px; font-weight: 500; color: var(--text); flex-shrink: 0; }
 .topbar-spacer { flex: 1; }
+
+.task-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+.task-row:hover { background: rgba(0,0,0,0.03); }
+.task-row.is-done { opacity: 0.5; }
+.task-row.is-done .task-title { text-decoration: line-through; }
+.task-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 14px; padding: 0; color: var(--text-secondary);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.task-row.is-done .task-check { color: var(--done); }
+.task-title { flex: 1; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-time { font-size: 11px; color: var(--text-secondary); }
