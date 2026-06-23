@@ -19,6 +19,15 @@ export function TaskRow({ task }: { task: Task }) {
     setPendingDone(task.status === 'done')
   }, [task.status])
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current != null) {
+        window.clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+    }
+  }, [])
+
   function cancelTimer() {
     if (timerRef.current != null) {
       window.clearTimeout(timerRef.current)
