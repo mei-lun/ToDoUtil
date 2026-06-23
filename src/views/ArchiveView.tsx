@@ -3,6 +3,7 @@ import { useViewStore } from '../store/view-store'
 import { useArchiveStore } from '../store/archive-store'
 import { Timeline } from '../components/Timeline'
 import { HeatmapGrid } from '../components/HeatmapGrid'
+import { api } from '../api'
 
 export function ArchiveView() {
   const setMode = useViewStore(s => s.setMode)
@@ -12,6 +13,12 @@ export function ArchiveView() {
   const [view, setView] = useState<'timeline' | 'grid'>('timeline')
 
   useEffect(() => { load() }, [load])
+
+  useEffect(() => {
+    if (view !== 'grid') return
+    api.window.enterGrid()
+    return () => { api.window.exitGrid() }
+  }, [view])
 
   return (
     <div className="archive-view">

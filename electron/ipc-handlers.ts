@@ -4,6 +4,7 @@ import * as poolRepo from './storage/pool-repo'
 import * as archiveRepo from './storage/archive-repo'
 import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
+import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop } from './window-manager'
 import type { Task, Config } from '../src/types'
 
 export function registerIpcHandlers() {
@@ -28,4 +29,8 @@ export function registerIpcHandlers() {
     return att.saveImageBuffer(taskId, buf, ext)
   })
   ipcMain.handle('attach:remove-task', (_e, taskId: string) => att.removeTaskAttachments(taskId))
+
+  ipcMain.handle('window:enter-grid', () => enterGridWidth())
+  ipcMain.handle('window:exit-grid', () => exitGridWidth())
+  ipcMain.handle('window:toggle-top', () => toggleAlwaysOnTop())
 }

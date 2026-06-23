@@ -5,6 +5,7 @@ import { loadConfig } from './config'
 import { registerIpcHandlers } from './ipc-handlers'
 import { resolveAttachmentPath } from './storage/attachments'
 import { startScheduler, stopScheduler } from './scheduler'
+import { setMainWindow, ensureOnScreen } from './window-manager'
 
 const isDev = !app.isPackaged
 
@@ -35,6 +36,9 @@ function createWindow() {
   } else {
     win.loadFile(path.join(__dirname, '../dist/index.html'))
   }
+
+  setMainWindow(win)
+  ensureOnScreen(win)
 }
 
 app.whenReady().then(() => {

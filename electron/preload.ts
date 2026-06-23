@@ -35,4 +35,9 @@ contextBridge.exposeInMainWorld('api', {
       return () => ipcRenderer.removeListener('tasks:rolled', listener)
     },
   },
+  window: {
+    enterGrid: (): Promise<void> => ipcRenderer.invoke('window:enter-grid'),
+    exitGrid:  (): Promise<void> => ipcRenderer.invoke('window:exit-grid'),
+    toggleTop: (): Promise<boolean> => ipcRenderer.invoke('window:toggle-top'),
+  },
 })

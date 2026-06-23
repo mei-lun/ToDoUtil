@@ -28,6 +28,11 @@ interface Api {
   events: {
     onTasksRolled(cb: () => void): () => void
   }
+  window: {
+    enterGrid(): Promise<void>
+    exitGrid(): Promise<void>
+    toggleTop(): Promise<boolean>
+  }
 }
 
 declare global {
