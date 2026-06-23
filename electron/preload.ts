@@ -67,5 +67,6 @@ contextBridge.exposeInMainWorld('api', {
   app: {
     restart: (): Promise<void> => ipcRenderer.invoke('app:restart'),
     pickDir: (): Promise<string | null> => ipcRenderer.invoke('dialog:pick-dir'),
+    dataDir: (): Promise<string> => ipcRenderer.invoke('paths:data-dir'),
   },
 })

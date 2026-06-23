@@ -77,7 +77,10 @@ export function SettingsView() {
               const dir = await api.app.pickDir()
               if (dir) { await update({ dataDir: dir }); await api.app.restart() }
             }}>选择目录…</button>
-            <button onClick={() => api.shell.openPath(cfg.dataDir === 'default' ? '' : cfg.dataDir)}>
+            <button onClick={async () => {
+              const dir = await api.app.dataDir()
+              await api.shell.openPath(dir)
+            }}>
               打开目录
             </button>
           </div>

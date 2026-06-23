@@ -4,6 +4,7 @@ import * as poolRepo from './storage/pool-repo'
 import * as archiveRepo from './storage/archive-repo'
 import * as att from './storage/attachments'
 import { loadConfig, saveConfig } from './config'
+import { getDataDir } from './storage/paths'
 import { enterGridWidth, exitGridWidth, toggleAlwaysOnTop, hideMain, showMain, isAlwaysOnTop } from './window-manager'
 import type { Task, Config } from '../src/types'
 
@@ -46,4 +47,5 @@ export function registerIpcHandlers() {
     const r = await dialog.showOpenDialog({ properties: ['openDirectory'] })
     return r.canceled ? null : r.filePaths[0]
   })
+  ipcMain.handle('paths:data-dir', () => getDataDir())
 }

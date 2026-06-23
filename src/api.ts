@@ -48,6 +48,7 @@ interface Api {
   app: {
     restart(): Promise<void>
     pickDir(): Promise<string | null>
+    dataDir(): Promise<string>
   }
 }
 
