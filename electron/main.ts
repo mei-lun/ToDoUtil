@@ -7,6 +7,7 @@ import { resolveAttachmentPath } from './storage/attachments'
 import { startScheduler, stopScheduler } from './scheduler'
 import { setMainWindow, ensureOnScreen } from './window-manager'
 import { createTray, destroyTray } from './tray-manager'
+import { registerShortcut, unregisterAll } from './shortcut-manager'
 
 const isDev = !app.isPackaged
 
@@ -62,10 +63,12 @@ app.whenReady().then(() => {
   createWindow()
   startScheduler()
   createTray()
+  registerShortcut()
 })
 
 app.on('before-quit', () => {
   ;(app as unknown as { isQuiting?: boolean }).isQuiting = true
+  unregisterAll()
   destroyTray()
   stopScheduler()
 })
