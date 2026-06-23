@@ -11,8 +11,7 @@
     { "from": "electron/assets", "to": "assets" }
   ],
   "win": {
-    "target": ["nsis"],
-    "icon": "electron/assets/tray-icon.png"
+    "target": ["nsis"]
   },
   "nsis": {
     "oneClick": false,
