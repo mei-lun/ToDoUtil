@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:  # 也允许手动触发（在 GitHub 网页 Actions 页面点 Run workflow）
+
+permissions:
+  contents: write     # 创建 release + 上传资产需要
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build Windows installer
+        run: npm run build
+        env:
+          # electron-builder 在 CI 中需要禁用代码签名（无证书时）
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+          # 自动获取 token 用于发布 release
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload installer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: todoutil-windows
+          path: |
+            release/**/*.exe
+            release/**/*.exe.blockmap
+            release/**/latest*.yml
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/**/*.exe
+            release/**/*.exe.blockmap
+            release/**/latest*.yml
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -231,6 +231,16 @@ todoutil/
 
 - [需求与设计](docs/superpowers/specs/2026-06-23-todoutil-design.md) — 41 项已确认决策表
 - [13 阶段实现计划](docs/superpowers/plans/2026-06-23-todoutil.md) — TDD 步骤、文件分工、commit 列表
+
+---
+
+## CI / Release
+
+- **CI**（[.github/workflows/ci.yml](.github/workflows/ci.yml)）：每次 push / PR 跑 `tsc --noEmit` + `npm test`，Ubuntu runner，几分钟出结果。
+- **Release**（[.github/workflows/release.yml](.github/workflows/release.yml)）：
+  - **打 tag 自动发布**：本地 `git tag v0.2.0 && git push origin v0.2.0` → workflow 在 Windows runner 上 build 安装包 → 自动创建同名 GitHub Release 并上传 `.exe`、`.blockmap`、`latest.yml`。
+  - **手动触发**：GitHub 仓库 → Actions → Release → Run workflow（产物仅作为 artifact 留存 30 天，不创建 Release）。
+  - 默认禁用代码签名（无证书时 Windows 会弹"未知发布者"提示，用户点"仍要运行"即可）。后续可在 Secrets 加 `CSC_LINK` + `CSC_KEY_PASSWORD` 启用签名。
 ---
 
 ## 致谢
