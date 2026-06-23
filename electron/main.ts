@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
 import path from 'node:path'
 import { setDataDir } from './storage/paths'
 import { loadConfig } from './config'
@@ -37,7 +37,12 @@ function createWindow() {
 
 app.whenReady().then(() => {
   const cfg = loadConfig()
-  setDataDir(cfg.dataDir)
+  const dataDir = setDataDir(cfg.dataDir)
+  protocol.registerFileProtocol('attachments', (request, callback) => {
+    const url = request.url.replace(/^attachments:\/\//, '')
+    const decoded = decodeURIComponent(url)
+    callback({ path: path.join(dataDir, 'attachments', decoded) })
+  })
   registerIpcHandlers()
   createWindow()
 })

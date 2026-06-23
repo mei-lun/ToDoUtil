@@ -19,6 +19,7 @@ export function TaskDetail({ task }: { task: Task }) {
       {editing ? (
         <MarkdownEditor
           initial={task.detail}
+          taskId={task.id}
           onSave={saveDetail}
           onCancel={() => setEditing(null)}
         />

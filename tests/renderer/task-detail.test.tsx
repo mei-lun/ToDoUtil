@@ -78,7 +78,7 @@ describe('TaskDetail integration', () => {
     useViewStore.setState({ editingTaskId: 't1' })
 
     render(<TaskDetail task={task} />)
-    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown（粘贴/拖拽图片）') as HTMLTextAreaElement
     await act(async () => {
       fireEvent.change(ta, { target: { value: 'updated content' } })
       fireEvent.blur(ta)
@@ -95,7 +95,7 @@ describe('TaskDetail integration', () => {
     useViewStore.setState({ editingTaskId: 't1' })
 
     render(<TaskDetail task={task} />)
-    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown（粘贴/拖拽图片）') as HTMLTextAreaElement
     await act(async () => {
       fireEvent.change(ta, { target: { value: 'b' } })
       fireEvent.keyDown(ta, { key: 's', ctrlKey: true })
@@ -112,7 +112,7 @@ describe('TaskDetail integration', () => {
     useViewStore.setState({ editingTaskId: 't1' })
 
     render(<TaskDetail task={task} />)
-    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown（粘贴/拖拽图片）') as HTMLTextAreaElement
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false)
     await act(async () => {
       fireEvent.change(ta, { target: { value: 'changed' } })
@@ -130,7 +130,7 @@ describe('TaskDetail integration', () => {
     useViewStore.setState({ editingTaskId: 't1' })
 
     render(<TaskDetail task={task} />)
-    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown（粘贴/拖拽图片）') as HTMLTextAreaElement
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
     // Pre-empt onBlur (which would save) by handling Esc first; the textarea
     // remains focused during the keyDown so blur won't fire as part of keyDown.
@@ -163,7 +163,7 @@ describe('TaskDetail integration', () => {
     })
 
     // Blur the editor without typing anything.
-    const ta = screen.getByPlaceholderText('写点什么…支持 markdown') as HTMLTextAreaElement
+    const ta = screen.getByPlaceholderText('写点什么…支持 markdown（粘贴/拖拽图片）') as HTMLTextAreaElement
     await act(async () => { fireEvent.blur(ta) })
 
     // The toggle must NOT have been reverted by a stale draft.
