@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react'
+import { api } from './api'
+
 export default function App() {
-  return (
-    <div style={{ padding: 12 }}>
-      <h1 style={{ fontSize: 14 }}>ToDoUtil</h1>
-      <p>Hello from React.</p>
-    </div>
-  )
+  const [count, setCount] = useState(0)
+  useEffect(() => { api.tasks.list().then(t => setCount(t.length)) }, [])
+  return <div style={{ padding: 12 }}>Tasks: {count}</div>
 }

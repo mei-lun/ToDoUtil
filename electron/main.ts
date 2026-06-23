@@ -1,17 +1,24 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
+import { setDataDir } from './storage/paths'
+import { loadConfig } from './config'
+import { registerIpcHandlers } from './ipc-handlers'
 
 const isDev = !app.isPackaged
 
 function createWindow() {
+  const cfg = loadConfig()
   const win = new BrowserWindow({
-    width: 280,
-    height: 600,
+    width: cfg.windowBounds.width,
+    height: cfg.windowBounds.height,
+    x: cfg.windowBounds.x,
+    y: cfg.windowBounds.y,
     frame: false,
     transparent: false,
     resizable: true,
     minWidth: 240,
     minHeight: 360,
+    alwaysOnTop: cfg.alwaysOnTop,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -28,12 +35,13 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  const cfg = loadConfig()
+  setDataDir(cfg.dataDir)
+  registerIpcHandlers()
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
-})
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
