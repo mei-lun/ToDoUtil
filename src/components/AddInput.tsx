@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useViewStore } from '../store/view-store'
 import { useTasksStore } from '../store/tasks-store'
 import { v4 as uuidv4 } from 'uuid'
+import { parseRawTitle } from '../utils/date-parser'
+import { todayStr } from '../utils/date-utils'
 
 export function AddInput() {
   const open = useViewStore(s => s.addInputOpen)
@@ -18,17 +20,21 @@ export function AddInput() {
   function submit() {
     const v = inputRef.current?.value.trim() ?? ''
     if (!v) return
-    const orderMax = tasks.filter(t => t.plannedDate === currentDate)
+    const parsed = parseRawTitle(v, todayStr())
+    const orderMax = tasks.filter(t => t.plannedDate === parsed.plannedDate)
       .reduce((m, t) => Math.max(m, t.order), 0)
     upsert({
       id: uuidv4(),
-      title: v, rawTitle: v, detail: '',
-      plannedDate: currentDate,
+      title: parsed.title || v,
+      rawTitle: v,
+      detail: '',
+      plannedDate: parsed.plannedDate,
+      plannedTime: parsed.plannedTime,
       createdAt: new Date().toISOString(),
       status: 'active',
       order: orderMax + 1,
       attachments: [],
-      originalPlannedDate: currentDate,
+      originalPlannedDate: parsed.plannedDate,
       pooledRanges: [],
     })
     if (inputRef.current) inputRef.current.value = ''
