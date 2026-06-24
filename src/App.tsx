@@ -26,8 +26,24 @@ export default function App() {
   useEffect(() => {
     const off = api.events.onTasksRolled(() => {
       useTasksStore.getState().load()
+      useViewStore.getState().tickToday()
     })
     return () => off()
+  }, [])
+
+  // 心跳：每 30s 检查一次系统日期，并在窗口重新可见时立即检查
+  useEffect(() => {
+    const tick = () => useViewStore.getState().tickToday()
+    tick()
+    const interval = window.setInterval(tick, 30_000)
+    const onVis = () => { if (document.visibilityState === 'visible') tick() }
+    document.addEventListener('visibilitychange', onVis)
+    window.addEventListener('focus', tick)
+    return () => {
+      window.clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVis)
+      window.removeEventListener('focus', tick)
+    }
   }, [])
 
   useEffect(() => {
